@@ -1,9 +1,8 @@
 {
-  "name": "root",
+  "name": "@tmciesco/input-otp-root",
   "private": true,
-  "author": "Guilherme Rodz <g@rodz.dev>",
-  "description": "One-time password input component for React.",
-  "homepage": "https://input-otp.rodz.dev/",
+  "author": "Troy Ciesco",
+  "description": "One-time password input component for React - forked from guilhermerodz/input-otp",
   "workspaces": [
     "packages/*",
     "apps/*"

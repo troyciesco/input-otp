@@ -1,3 +1,20 @@
+# Input OTP (Iframe-Compatible Fork)
+
+This is a fork of [input-otp](https://github.com/guilhermerodz/input-otp) with iframe support added.
+
+## Installation
+
+```bash
+npm install @hedgewizard.dev/input-otp
+```
+
+### Changes from Original
+- ✅ Works inside iframes
+- ✅ Uses `ownerDocument` for DOM operations
+- ✅ Fully backward compatible
+
+### Original README 👇
+
 # The only accessible & unstyled & full featured Input OTP component in the Web.
 
 ### OTP Input for React 🔐 by [@guilhermerodz](https://twitter.com/guilherme_rodz)

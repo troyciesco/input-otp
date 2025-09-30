@@ -3,7 +3,7 @@ name: Bug report
 about: Describe your bug. Which version?
 title: "[BUG]"
 labels: bug
-assignees: guilhermerodz
+assignees: troyciesco
 
 ---
 
