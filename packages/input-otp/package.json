@@ -1,6 +1,6 @@
 {
   "name": "@hedgewizard.dev/input-otp",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "author": "Troy Ciesco",
   "description": "One-time password input component for React - forked from guilhermerodz/input-otp",
   "license": "MIT",
