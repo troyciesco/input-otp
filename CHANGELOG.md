@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.4.3] - 2025-09-30
+
+### Added
+- Iframe support: Library now works correctly inside iframe elements
+- Uses `ownerDocument` and `ownerWindow` for DOM operations
+
+### Changed
+- Selection tracking now uses input's owner document
+- Password manager badge detection is iframe-aware
+- ResizeObserver uses iframe's window context
+
+--- Below is before fork ---
+
 ## [1.4.2]
 
 - chore(input): remove unintentional log within internal pasteListener
