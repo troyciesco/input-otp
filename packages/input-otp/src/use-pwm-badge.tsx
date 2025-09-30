@@ -57,6 +57,9 @@ export function usePasswordManagerBadge({
       return
     }
 
+    // Use the input's owner document for iframe support
+    const ownerDocument = input.ownerDocument || document
+
     const elementToCompare = container
 
     // Get the top right-center point of the container.
@@ -71,13 +74,13 @@ export function usePasswordManagerBadge({
     const y = centereredY
 
     // Do an extra search to check for famous password managers
-    const pmws = document.querySelectorAll(PASSWORD_MANAGERS_SELECTORS)
+    const pmws = ownerDocument.querySelectorAll(PASSWORD_MANAGERS_SELECTORS)
 
     // If no password manager is automatically detect,
     // we'll try to dispatch document.elementFromPoint
     // to identify badges
     if (pmws.length === 0) {
-      const maybeBadgeEl = document.elementFromPoint(x, y)
+      const maybeBadgeEl = ownerDocument.elementFromPoint(x, y)
 
       // If the found element is the input itself,
       // then we assume it's not a password manager badge.
@@ -93,13 +96,18 @@ export function usePasswordManagerBadge({
 
   React.useEffect(() => {
     const container = containerRef.current
-    if (!container || pushPasswordManagerStrategy === 'none') {
+    const input = inputRef.current
+    if (!container || !input || pushPasswordManagerStrategy === 'none') {
       return
     }
 
+    // Use the input's owner document for iframe support
+    const ownerDocument = input.ownerDocument || document
+    const ownerWindow = ownerDocument.defaultView || window
+
     // Check if the PWM area is 100% visible
     function checkHasSpace() {
-      const viewportWidth = window.innerWidth
+      const viewportWidth = ownerWindow.innerWidth
       const distanceToRightEdge =
         viewportWidth - container.getBoundingClientRect().right
       setHasPWMBadgeSpace(distanceToRightEdge >= PWM_BADGE_SPACE_WIDTH_PX)
@@ -111,10 +119,12 @@ export function usePasswordManagerBadge({
     return () => {
       clearInterval(interval)
     }
-  }, [containerRef, pushPasswordManagerStrategy])
+  }, [containerRef, inputRef, pushPasswordManagerStrategy])
 
   React.useEffect(() => {
-    const _isFocused = isFocused || document.activeElement === inputRef.current
+    const input = inputRef.current
+    const ownerDocument = input?.ownerDocument || document
+    const _isFocused = isFocused || ownerDocument.activeElement === input
 
     if (pushPasswordManagerStrategy === 'none' || !_isFocused) {
       return

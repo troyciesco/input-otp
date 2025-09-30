@@ -87,6 +87,10 @@ export const OTPInput = React.forwardRef<HTMLInputElement, OTPInputProps>(
         return
       }
 
+      // Use the input's owner document for iframe support
+      const ownerDocument = input.ownerDocument || document
+      const ownerWindow = ownerDocument.defaultView || window
+
       // Sync input value
       if (initialLoadRef.current.value !== input.value) {
         initialLoadRef.current.onChange(input.value)
@@ -99,7 +103,7 @@ export const OTPInput = React.forwardRef<HTMLInputElement, OTPInputProps>(
         input.selectionDirection,
       ]
       function onDocumentSelectionChange() {
-        if (document.activeElement !== input) {
+        if (ownerDocument.activeElement !== input) {
           setMirrorSelectionStart(null)
           setMirrorSelectionEnd(null)
           return
@@ -161,19 +165,19 @@ export const OTPInput = React.forwardRef<HTMLInputElement, OTPInputProps>(
         // Store the previous selection value
         inputMetadataRef.current.prev = [s, e, dir]
       }
-      document.addEventListener('selectionchange', onDocumentSelectionChange, {
+      ownerDocument.addEventListener('selectionchange', onDocumentSelectionChange, {
         capture: true,
       })
 
       // Set initial mirror state
       onDocumentSelectionChange()
-      document.activeElement === input && setIsFocused(true)
+      ownerDocument.activeElement === input && setIsFocused(true)
 
       // Apply needed styles
-      if (!document.getElementById('input-otp-style')) {
-        const styleEl = document.createElement('style')
+      if (!ownerDocument.getElementById('input-otp-style')) {
+        const styleEl = ownerDocument.createElement('style')
         styleEl.id = 'input-otp-style'
-        document.head.appendChild(styleEl)
+        ownerDocument.head.appendChild(styleEl)
 
         if (styleEl.sheet) {
           const autofillStyles =
@@ -213,11 +217,11 @@ export const OTPInput = React.forwardRef<HTMLInputElement, OTPInputProps>(
         }
       }
       updateRootHeight()
-      const resizeObserver = new ResizeObserver(updateRootHeight)
+      const resizeObserver = new (ownerWindow.ResizeObserver || ResizeObserver)(updateRootHeight)
       resizeObserver.observe(input)
 
       return () => {
-        document.removeEventListener(
+        ownerDocument.removeEventListener(
           'selectionchange',
           onDocumentSelectionChange,
           { capture: true },
@@ -291,7 +295,8 @@ export const OTPInput = React.forwardRef<HTMLInputElement, OTPInputProps>(
           // selectionchange event, we'll have to dispatch it manually.
           // NOTE: The following line also triggers when cmd+A then pasting
           // a value with smaller length, which is not ideal for performance.
-          document.dispatchEvent(new Event('selectionchange'))
+          const ownerDocument = e.currentTarget.ownerDocument || document
+          ownerDocument.dispatchEvent(new Event('selectionchange'))
         }
         onChange(newValue)
       },
