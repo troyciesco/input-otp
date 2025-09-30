@@ -1,17 +1,17 @@
 {
-  "name": "input-otp",
+  "name": "@hedgewizard.dev/input-otp",
   "version": "1.4.2",
-  "author": "Guilherme Rodz <g@rodz.dev>",
-  "description": "One-time password input component for React.",
+  "author": "Troy Ciesco",
+  "description": "One-time password input component for React - forked from guilhermerodz/input-otp",
   "license": "MIT",
-  "homepage": "https://input-otp.rodz.dev/",
+  "homepage": "https://github.com/troyciesco/input-otp",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/guilhermerodz/input-otp.git",
+    "url": "git+https://github.com/troyciesco/input-otp.git",
     "directory": "packages/input-otp"
   },
   "bugs": {
-    "url": "https://github.com/guilhermerodz/input-otp/issues"
+    "url": "https://github.com/troyciesco/input-otp/issues"
   },
   "keywords": [
     "react",
