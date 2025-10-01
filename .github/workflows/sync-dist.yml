@@ -1,9 +1,10 @@
 name: Sync dist branch
 on:
   push:
-    branches: [master]
+    branches: [main, master]
     paths:
       - 'packages/input-otp/**'
+  workflow_dispatch:
 
 jobs:
   sync:
