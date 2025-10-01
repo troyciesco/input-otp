@@ -1,0 +1,47 @@
+name: Sync dist branch
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'packages/input-otp/**'
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      
+      - name: Install pnpm
+        run: npm install -g pnpm
+      
+      - name: Install dependencies
+        run: pnpm install
+      
+      - name: Build package
+        run: |
+          cd packages/input-otp
+          pnpm build
+      
+      - name: Deploy to dist branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Create orphan dist branch if it doesn't exist
+          git checkout --orphan dist || git checkout dist
+          git rm -rf . || true
+          
+          # Copy only package contents
+          cp -r packages/input-otp/* .
+          cp packages/input-otp/.* . 2>/dev/null || true
+          
+          git add .
+          git commit -m "Auto-sync from master: ${{ github.sha }}" || echo "No changes"
+          git push -f origin dist
