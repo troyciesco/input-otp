@@ -4,6 +4,7 @@ on:
     branches: [main, master]
     paths:
       - 'packages/input-otp/**'
+      - '.github/workflows/sync-dist.yml'
   workflow_dispatch:
 
 jobs:
@@ -29,6 +30,7 @@ jobs:
         run: |
           cd packages/input-otp
           pnpm build
+          cd "$GITHUB_WORKSPACE"
       
       - name: Deploy to dist branch
         run: |
