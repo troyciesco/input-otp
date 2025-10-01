@@ -36,6 +36,12 @@ jobs:
         run: |
           set -euo pipefail
 
+          TEMP_DIR=$(mktemp -d)
+          rsync -a --delete \
+            --exclude 'node_modules' \
+            --exclude '.turbo' \
+            packages/input-otp/ "$TEMP_DIR"/
+
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
@@ -50,14 +56,8 @@ jobs:
           git reset --hard
           git clean -fdx
 
-          mkdir -p sync-tmp
-          rsync -a --delete \
-            --exclude 'node_modules' \
-            --exclude '.turbo' \
-            packages/input-otp/ sync-tmp/
-
-          rsync -a --delete sync-tmp/ ./
-          rm -rf sync-tmp
+          rsync -a --delete "$TEMP_DIR"/ ./
+          rm -rf "$TEMP_DIR"
 
           git add .
           git commit -m "Auto-sync from master: ${{ github.sha }}" || echo "No changes"
