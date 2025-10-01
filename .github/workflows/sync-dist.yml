@@ -44,12 +44,16 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
           git fetch origin dist || true
-          # Create orphan dist branch if it doesn't exist
-          git checkout --orphan dist || git checkout dist
-          git reset --hard
-          git rm -rf . || true
 
-          # Sync package contents without development artifacts
+          if git show-ref --verify --quiet refs/heads/dist; then
+            git checkout dist
+          else
+            git checkout --orphan dist
+          fi
+
+          git reset --hard
+          git clean -fdx
+
           rsync -a --delete "$TEMP_DIR"/ ./
           rm -rf "$TEMP_DIR"
 
