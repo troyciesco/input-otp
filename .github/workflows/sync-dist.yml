@@ -31,18 +31,26 @@ jobs:
       
       - name: Deploy to dist branch
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          set -euo pipefail
 
-          # Create orphan dist branch if it doesn't exist
-          git checkout --orphan dist || git checkout dist
-          git rm -rf . || true
-
-          # Sync package contents without development artifacts
+          TEMP_DIR=$(mktemp -d)
           rsync -a --delete \
             --exclude 'node_modules' \
             --exclude '.turbo' \
-            packages/input-otp/ ./
+            packages/input-otp/ "$TEMP_DIR"/
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git fetch origin dist || true
+          # Create orphan dist branch if it doesn't exist
+          git checkout --orphan dist || git checkout dist
+          git reset --hard
+          git rm -rf . || true
+
+          # Sync package contents without development artifacts
+          rsync -a --delete "$TEMP_DIR"/ ./
+          rm -rf "$TEMP_DIR"
 
           git add .
           git commit -m "Auto-sync from master: ${{ github.sha }}" || echo "No changes"
