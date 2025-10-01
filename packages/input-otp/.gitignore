@@ -1,4 +1,4 @@
-# for .github/workflows/sync-dist.yml to work properly. dist deliberately omitted here
+# For .github/workflows/sync-dist.yml to work properly.
 .turbo
 node_modules
 README.md
