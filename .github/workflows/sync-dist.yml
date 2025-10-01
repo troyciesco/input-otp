@@ -37,10 +37,12 @@ jobs:
           set -euo pipefail
 
           TEMP_DIR=$(mktemp -d)
-          rsync -a --delete \
-            --exclude 'node_modules' \
-            --exclude '.turbo' \
-            packages/input-otp/ "$TEMP_DIR"/
+          
+          # Only copy the files we want: dist/, package.json, README.md, .gitignore
+          cp -r packages/input-otp/dist "$TEMP_DIR"/
+          cp packages/input-otp/package.json "$TEMP_DIR"/
+          cp packages/input-otp/README.md "$TEMP_DIR"/
+          cp packages/input-otp/.gitignore "$TEMP_DIR"/ 2>/dev/null || true
 
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
